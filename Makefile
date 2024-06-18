@@ -14,3 +14,10 @@ clean:
 
 run:
 	./move_zeroes
+
+data_race:
+	g++ -std=c++11 -o data_race_err data_race_err.cpp -lpthread
+
+data_race_fix:
+	g++ -std=c++11 -o data_race_fix data_race_fix.cpp -lpthread
+
