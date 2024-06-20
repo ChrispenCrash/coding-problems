@@ -56,21 +56,23 @@ int main() {
         total_duration += duration.count();
     }
 
-    std::cout << "\n\n(for loop) Majority: " << majority
+    std::cout << "\n\n(for loop) \tMajority: " << majority
               << "\tAverage time: " << (total_duration / (double)num_runs)
               << " microseconds" << std::endl;
 
     // Find majority element using Hash Map
     // TODO: Find out why it's much slower than the for loop
     total_duration = 0;
+    std::unordered_map<int, int> hash_count;
+    majority = 0;
     for (int run = 0; run < num_runs; ++run) {
+        hash_count.clear();
         auto start = std::chrono::high_resolution_clock::now();
 
-        std::unordered_map<int, int> hash_count;
         for (int i = 0; i < N; i++) {
             hash_count[arr[i]]++;
         }
-        majority = 0;
+        majority = arr[0];
         int highest_count = hash_count[arr[0]];
         for (const auto& pair : hash_count) {
             if (pair.second > highest_count) {
@@ -86,11 +88,34 @@ int main() {
         total_duration += duration.count();
     }
 
-    std::cout << "\n\n(hash map) Majority: " << majority
+    std::cout << "(hash map) \tMajority: " << majority
               << "\tAverage time: " << (total_duration / (double)num_runs)
               << " microseconds" << std::endl;
 
-    // TODO: Find majority element using Boyer-Moore Voting Algorithm
+    // Find majority element using Boyer-Moore Voting Algorithm
+    total_duration = 0;
+    for (int run = 0; run < num_runs; ++run) {
+        auto start = std::chrono::high_resolution_clock::now();
+
+        int majority = 0;
+        int count = 0;
+        for (int i = 0; i < N; i++) {
+            if (count == 0) {
+                majority = arr[i];
+            }
+            majority == arr[i] ? count++ : count--;
+        }
+
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration =
+            std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+        total_duration += duration.count();
+    }
+
+    std::cout << "(Boyer-Moore) \tMajority: " << majority
+              << "\tAverage time: " << (total_duration / (double)num_runs)
+              << " microseconds" << std::endl;
 
     delete[] arr;
 
