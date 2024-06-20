@@ -6,11 +6,13 @@
 int main() {
     const int N = 100;
     const int MAX = 10;
-    const int num_runs = 1000000;
+    const int num_runs = 100000;
 
     std::srand(std::time(0));
 
     int* arr = new int[N];
+    // Supposely better way to declare array but slower
+    // std::array<int, N> arr;
 
     // Fill and print initial array
     printf("Array:\n");
@@ -66,7 +68,12 @@ int main() {
     std::unordered_map<int, int> hash_count;
     majority = 0;
     for (int run = 0; run < num_runs; ++run) {
-        hash_count.clear();
+        // This line was slowing the hashmap
+        // hash_count.clear();
+        for (int i = 0; i < MAX; i++) {
+            hash_count[i] = 0;
+        }
+
         auto start = std::chrono::high_resolution_clock::now();
 
         for (int i = 0; i < N; i++) {
