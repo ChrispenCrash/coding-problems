@@ -1,130 +1,204 @@
+#include <array>
 #include <chrono>
 #include <ctime>
 #include <iostream>
+#include <string>
 #include <unordered_map>
+#include <vector>
+
+using namespace std;
+
+string random_word(int random_number) {
+    string word;
+    switch (random_number) {
+        case 0:
+            word = "apple";
+            break;
+        case 1:
+            word = "banana";
+            break;
+        case 2:
+            word = "cherry";
+            break;
+        case 3:
+            word = "date";
+            break;
+        case 4:
+            word = "elderberry";
+            break;
+        case 5:
+            word = "fig";
+            break;
+        case 6:
+            word = "grape";
+            break;
+        case 7:
+            word = "honeydew";
+            break;
+        case 8:
+            word = "kiwi";
+            break;
+        case 9:
+            word = "lemon";
+            break;
+    }
+
+    return word;
+}
 
 int main() {
     const int N = 100;
     const int MAX = 10;
     const int num_runs = 100000;
 
-    std::srand(std::time(0));
+    srand(time(0));
 
-    int* arr = new int[N];
+    // int* arr = new int[N];
     // Supposely better way to declare array but slower
-    // std::array<int, N> arr;
+    // array<string, N> words;
+    vector<string> words;
+    string word;
 
     // Fill and print initial array
-    printf("Array:\n");
+    printf("Word list:\n");
     for (int i = 0; i < N; i++) {
-        arr[i] = std::rand() % MAX;
-        printf("%d ", arr[i]);
+        word = random_word(rand() % MAX);
+        words.push_back(word);
+        printf("%s ", word.c_str());
+    }
+
+    // 2D vector to store pairs of words and their counts
+    vector<pair<string, int>> wordCount;
+
+    // Loop through the vector of strings
+    for (const auto& word : words) {
+        bool found = false;
+        // Check if the word is already in the wordCount vector
+        for (auto& entry : wordCount) {
+            if (entry.first == word) {
+                // Increment the count if the word is found
+                ++entry.second;
+                found = true;
+                break;
+            }
+        }
+        // If the word is not found, add it to the wordCount vector with count 1
+        if (!found) {
+            wordCount.push_back(make_pair(word, 1));
+        }
+    }
+
+    // Print the word counts
+    printf("\n\nWord counts:\n");
+    for (const auto& entry : wordCount) {
+        // cout << entry.first << ": " << entry.second << endl;
+        printf("%s: %d\n", entry.first.c_str(), entry.second);
     }
 
     // Initial loop to count occurrences of each element
-    int init_count[MAX] = {0};
-    for (int i = 0; i < N; i++) {
-        init_count[arr[i]]++;
-    }
-    printf("\n\nOccurrences of each number:\n");
-    for (int i = 0; i < MAX; i++) {
-        printf("%d: %d\t", i, init_count[i]);
-    }
+    // int counter[MAX] = {0};
+    // for (int i = 0; i < N; i++) {
+    //     counter[arr[i]]++;
+    // }
+    // printf("\n\nOccurrences of each number:\n");
+    // for (int i = 0; i < MAX; i++) {
+    //     printf("%d: %d\t", i, counter[i]);
+    // }
 
-    // Find majority element using For Loop
-    long long total_duration = 0;
-    int majority;
-    for (int run = 0; run < num_runs; ++run) {
-        auto start = std::chrono::high_resolution_clock::now();
+    // // Find majority element using For Loop
+    // long long total_duration = 0;
+    // int majority;
+    // for (int run = 0; run < num_runs; ++run) {
+    //     auto start = chrono::high_resolution_clock::now();
 
-        int count_for_loop[MAX] = {0};
-        for (int i = 0; i < N; i++) {
-            count_for_loop[arr[i]]++;
-        }
+    //     int count_for_loop[MAX] = {0};
+    //     for (int i = 0; i < N; i++) {
+    //         count_for_loop[arr[i]]++;
+    //     }
 
-        majority = 0;
-        int highest_count = count_for_loop[0];
-        for (int i = 1; i < MAX; i++) {
-            if (count_for_loop[i] > highest_count) {
-                majority = i;
-                highest_count = count_for_loop[i];
-            }
-        }
+    //     majority = 0;
+    //     int highest_count = count_for_loop[0];
+    //     for (int i = 1; i < MAX; i++) {
+    //         if (count_for_loop[i] > highest_count) {
+    //             majority = i;
+    //             highest_count = count_for_loop[i];
+    //         }
+    //     }
 
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration =
-            std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    //     auto end = chrono::high_resolution_clock::now();
+    //     auto duration =
+    //         chrono::duration_cast<chrono::microseconds>(end - start);
 
-        total_duration += duration.count();
-    }
+    //     total_duration += duration.count();
+    // }
 
-    std::cout << "\n\n(for loop) \tMajority: " << majority
-              << "\tAverage time: " << (total_duration / (double)num_runs)
-              << " microseconds" << std::endl;
+    // cout << "\n\n(for loop) \tMajority: " << majority
+    //      << "\tAverage time: " << (total_duration / (double)num_runs)
+    //      << " microseconds" << endl;
 
-    // Find majority element using Hash Map
-    // TODO: Find out why it's much slower than the for loop
-    total_duration = 0;
-    std::unordered_map<int, int> hash_count;
-    majority = 0;
-    for (int run = 0; run < num_runs; ++run) {
-        // This line was slowing the hashmap
-        // hash_count.clear();
-        for (int i = 0; i < MAX; i++) {
-            hash_count[i] = 0;
-        }
+    // // Find majority element using Hash Map
+    // // TODO: Find out why it's much slower than the for loop
+    // total_duration = 0;
+    // unordered_map<int, int> hash_count;
+    // majority = 0;
+    // for (int run = 0; run < num_runs; ++run) {
+    //     // This line was slowing the hashmap
+    //     // hash_count.clear();
+    //     for (int i = 0; i < MAX; i++) {
+    //         hash_count[i] = 0;
+    //     }
 
-        auto start = std::chrono::high_resolution_clock::now();
+    //     auto start = chrono::high_resolution_clock::now();
 
-        for (int i = 0; i < N; i++) {
-            hash_count[arr[i]]++;
-        }
-        majority = arr[0];
-        int highest_count = hash_count[arr[0]];
-        for (const auto& pair : hash_count) {
-            if (pair.second > highest_count) {
-                majority = pair.first;
-                highest_count = pair.second;
-            }
-        }
+    //     for (int i = 0; i < N; i++) {
+    //         hash_count[arr[i]]++;
+    //     }
+    //     majority = arr[0];
+    //     int highest_count = hash_count[arr[0]];
+    //     for (const auto& pair : hash_count) {
+    //         if (pair.second > highest_count) {
+    //             majority = pair.first;
+    //             highest_count = pair.second;
+    //         }
+    //     }
 
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration =
-            std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    //     auto end = chrono::high_resolution_clock::now();
+    //     auto duration =
+    //         chrono::duration_cast<chrono::microseconds>(end - start);
 
-        total_duration += duration.count();
-    }
+    //     total_duration += duration.count();
+    // }
 
-    std::cout << "(hash map) \tMajority: " << majority
-              << "\tAverage time: " << (total_duration / (double)num_runs)
-              << " microseconds" << std::endl;
+    // cout << "(hash map) \tMajority: " << majority
+    //      << "\tAverage time: " << (total_duration / (double)num_runs)
+    //      << " microseconds" << endl;
 
-    // Find majority element using Boyer-Moore Voting Algorithm
-    total_duration = 0;
-    for (int run = 0; run < num_runs; ++run) {
-        auto start = std::chrono::high_resolution_clock::now();
+    // // Find majority element using Boyer-Moore Voting Algorithm
+    // total_duration = 0;
+    // for (int run = 0; run < num_runs; ++run) {
+    //     auto start = chrono::high_resolution_clock::now();
 
-        int majority = 0;
-        int count = 0;
-        for (int i = 0; i < N; i++) {
-            if (count == 0) {
-                majority = arr[i];
-            }
-            majority == arr[i] ? count++ : count--;
-        }
+    //     int majority = 0;
+    //     int count = 0;
+    //     for (int i = 0; i < N; i++) {
+    //         if (count == 0) {
+    //             majority = arr[i];
+    //         }
+    //         majority == arr[i] ? count++ : count--;
+    //     }
 
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration =
-            std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    //     auto end = chrono::high_resolution_clock::now();
+    //     auto duration =
+    //         chrono::duration_cast<chrono::microseconds>(end - start);
 
-        total_duration += duration.count();
-    }
+    //     total_duration += duration.count();
+    // }
 
-    std::cout << "(Boyer-Moore) \tMajority: " << majority
-              << "\tAverage time: " << (total_duration / (double)num_runs)
-              << " microseconds" << std::endl;
+    // cout << "(Boyer-Moore) \tMajority: " << majority
+    //      << "\tAverage time: " << (total_duration / (double)num_runs)
+    //      << " microseconds" << endl;
 
-    delete[] arr;
+    // delete[] words;
 
     return 0;
 }
