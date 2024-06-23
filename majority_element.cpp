@@ -108,7 +108,7 @@ int main() {
     printf("Starting for loop...\n");
     // Find majority element using For Loop
     long long total_duration = 0;
-    int majority;
+    string majority;
     for (int run = 0; run < num_runs; ++run) {
         auto start = chrono::high_resolution_clock::now();
 
@@ -124,10 +124,10 @@ int main() {
                     break;
                 }
 
-                if (entry.second > highest_count) {
-                    majority_word = entry.first;
-                    highest_count = entry.second;
-                }
+                // if (entry.second > highest_count) {
+                //     majority_word = entry.first;
+                //     highest_count = entry.second;
+                // }
             }
             // If the word is not found, add it to the wordCount vector with
             // count 1
@@ -143,46 +143,49 @@ int main() {
         total_duration += duration.count();
     }
 
-    cout << "(for loop) Majority(" << highest_count << "): " << majority_word
+    cout << "(for loop) Majority(" << highest_count << "): "
+         << majority_word
+         // cout << "(for loop) Majority: " << majority_word
          << "\tAverage time: " << (total_duration / (double)num_runs)
          << " microseconds" << endl;
 
-    // // Find majority element using Hash Map
-    // // TODO: Find out why it's much slower than the for loop
-    // total_duration = 0;
-    // unordered_map<int, int> hash_count;
-    // majority = 0;
-    // for (int run = 0; run < num_runs; ++run) {
-    //     // This line was slowing the hashmap
-    //     // hash_count.clear();
-    //     for (int i = 0; i < MAX; i++) {
-    //         hash_count[i] = 0;
-    //     }
+    // Find majority element using Hash Map
+    total_duration = 0;
+    unordered_map<string, int> hash_count;
 
-    //     auto start = chrono::high_resolution_clock::now();
+    for (int run = 0; run < num_runs; ++run) {
+        // This line was slowing the hashmap
+        hash_count.clear();
+        // for (int i = 0; i < MAX; i++) {
+        //     hash_count[i] = 0;
+        // }
 
-    //     for (int i = 0; i < N; i++) {
-    //         hash_count[arr[i]]++;
-    //     }
-    //     majority = arr[0];
-    //     int highest_count = hash_count[arr[0]];
-    //     for (const auto& pair : hash_count) {
-    //         if (pair.second > highest_count) {
-    //             majority = pair.first;
-    //             highest_count = pair.second;
-    //         }
-    //     }
+        auto start = chrono::high_resolution_clock::now();
 
-    //     auto end = chrono::high_resolution_clock::now();
-    //     auto duration =
-    //         chrono::duration_cast<chrono::microseconds>(end - start);
+        for (int i = 0; i < N; i++) {
+            hash_count[words[i]]++;
+        }
 
-    //     total_duration += duration.count();
-    // }
+        auto end = chrono::high_resolution_clock::now();
+        auto duration =
+            chrono::duration_cast<chrono::microseconds>(end - start);
 
-    // cout << "(hash map) \tMajority: " << majority
-    //      << "\tAverage time: " << (total_duration / (double)num_runs)
-    //      << " microseconds" << endl;
+        total_duration += duration.count();
+    }
+
+    // Set majority to the first element in the hash map
+    majority_word = hash_count.begin()->first;
+    highest_count = hash_count.begin()->second;
+    for (const auto& pair : hash_count) {
+        if (pair.second > highest_count) {
+            majority = pair.first;
+            highest_count = pair.second;
+        }
+    }
+
+    cout << "(hash map) Majority(" << highest_count << "): " << majority_word
+         << "\tAverage time: " << (total_duration / (double)num_runs)
+         << " microseconds" << endl;
 
     // // Find majority element using Boyer-Moore Voting Algorithm
     // total_duration = 0;
