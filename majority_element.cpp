@@ -189,17 +189,19 @@ int main() {
 
     // Find majority element using Boyer-Moore Voting Algorithm
     total_duration = 0;
-    int count = 0;
+    int running_count = 0;
+    string candidate_majority;
     for (int run = 0; run < num_runs; ++run) {
         auto start = chrono::high_resolution_clock::now();
 
-        majority = "";
-        count = 0;
+        candidate_majority = "";
+        running_count = 0;
         for (int i = 0; i < N; i++) {
-            if (count == 0) {
-                majority = words[i];
+            if (running_count == 0) {
+                candidate_majority = words[i];
             }
-            majority == words[i] ? count++ : count--;
+            (candidate_majority == words[i]) ? running_count++
+                                             : running_count--;
         }
 
         auto end = chrono::high_resolution_clock::now();
@@ -209,7 +211,15 @@ int main() {
         total_duration += duration.count();
     }
 
-    cout << "(Boyer-Moore) \tMajority(" << count << "): " << majority
+    int actual_count = 0;
+    for (int i = 0; i < N; i++) {
+        if (words[i] == candidate_majority) {
+            actual_count++;
+        }
+    }
+
+    cout << "(Boyer-Moore) \tMajority(" << actual_count
+         << "): " << candidate_majority
          << "\tAverage time: " << (total_duration / (double)num_runs)
          << " microseconds" << endl;
 
