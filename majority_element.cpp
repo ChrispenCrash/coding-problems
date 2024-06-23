@@ -69,6 +69,8 @@ int main() {
 
     // 2D vector to store pairs of words and their counts
     vector<pair<string, int>> wordCount;
+    string majority_word;
+    int highest_count = 0;
 
     // Loop through the vector of strings
     for (const auto& word : words) {
@@ -80,6 +82,11 @@ int main() {
                 ++entry.second;
                 found = true;
                 break;
+            }
+
+            if (entry.second > highest_count) {
+                majority_word = entry.first;
+                highest_count = entry.second;
             }
         }
         // If the word is not found, add it to the wordCount vector with count 1
@@ -95,46 +102,50 @@ int main() {
         printf("%s: %d\n", entry.first.c_str(), entry.second);
     }
 
-    // Initial loop to count occurrences of each element
-    // int counter[MAX] = {0};
-    // for (int i = 0; i < N; i++) {
-    //     counter[arr[i]]++;
-    // }
-    // printf("\n\nOccurrences of each number:\n");
-    // for (int i = 0; i < MAX; i++) {
-    //     printf("%d: %d\t", i, counter[i]);
-    // }
+    printf("\nMajority word: %s Count: %d\n\n", majority_word.c_str(),
+           highest_count);
 
-    // // Find majority element using For Loop
-    // long long total_duration = 0;
-    // int majority;
-    // for (int run = 0; run < num_runs; ++run) {
-    //     auto start = chrono::high_resolution_clock::now();
+    printf("Starting for loop...\n");
+    // Find majority element using For Loop
+    long long total_duration = 0;
+    int majority;
+    for (int run = 0; run < num_runs; ++run) {
+        auto start = chrono::high_resolution_clock::now();
 
-    //     int count_for_loop[MAX] = {0};
-    //     for (int i = 0; i < N; i++) {
-    //         count_for_loop[arr[i]]++;
-    //     }
+        wordCount.clear();
+        for (const auto& word : words) {
+            bool found = false;
+            // Check if the word is already in the wordCount vector
+            for (auto& entry : wordCount) {
+                if (entry.first == word) {
+                    // Increment the count if the word is found
+                    ++entry.second;
+                    found = true;
+                    break;
+                }
 
-    //     majority = 0;
-    //     int highest_count = count_for_loop[0];
-    //     for (int i = 1; i < MAX; i++) {
-    //         if (count_for_loop[i] > highest_count) {
-    //             majority = i;
-    //             highest_count = count_for_loop[i];
-    //         }
-    //     }
+                if (entry.second > highest_count) {
+                    majority_word = entry.first;
+                    highest_count = entry.second;
+                }
+            }
+            // If the word is not found, add it to the wordCount vector with
+            // count 1
+            if (!found) {
+                wordCount.push_back(make_pair(word, 1));
+            }
+        }
 
-    //     auto end = chrono::high_resolution_clock::now();
-    //     auto duration =
-    //         chrono::duration_cast<chrono::microseconds>(end - start);
+        auto end = chrono::high_resolution_clock::now();
+        auto duration =
+            chrono::duration_cast<chrono::microseconds>(end - start);
 
-    //     total_duration += duration.count();
-    // }
+        total_duration += duration.count();
+    }
 
-    // cout << "\n\n(for loop) \tMajority: " << majority
-    //      << "\tAverage time: " << (total_duration / (double)num_runs)
-    //      << " microseconds" << endl;
+    cout << "(for loop) Majority(" << highest_count << "): " << majority_word
+         << "\tAverage time: " << (total_duration / (double)num_runs)
+         << " microseconds" << endl;
 
     // // Find majority element using Hash Map
     // // TODO: Find out why it's much slower than the for loop
