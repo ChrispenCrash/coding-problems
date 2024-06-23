@@ -143,7 +143,7 @@ int main() {
         total_duration += duration.count();
     }
 
-    cout << "(for loop) Majority(" << highest_count << "): "
+    cout << "(for loop) \tMajority(" << highest_count << "): "
          << majority_word
          // cout << "(for loop) Majority: " << majority_word
          << "\tAverage time: " << (total_duration / (double)num_runs)
@@ -183,34 +183,35 @@ int main() {
         }
     }
 
-    cout << "(hash map) Majority(" << highest_count << "): " << majority_word
+    cout << "(hash map) \tMajority(" << highest_count << "): " << majority_word
          << "\tAverage time: " << (total_duration / (double)num_runs)
          << " microseconds" << endl;
 
-    // // Find majority element using Boyer-Moore Voting Algorithm
-    // total_duration = 0;
-    // for (int run = 0; run < num_runs; ++run) {
-    //     auto start = chrono::high_resolution_clock::now();
+    // Find majority element using Boyer-Moore Voting Algorithm
+    total_duration = 0;
+    int count = 0;
+    for (int run = 0; run < num_runs; ++run) {
+        auto start = chrono::high_resolution_clock::now();
 
-    //     int majority = 0;
-    //     int count = 0;
-    //     for (int i = 0; i < N; i++) {
-    //         if (count == 0) {
-    //             majority = arr[i];
-    //         }
-    //         majority == arr[i] ? count++ : count--;
-    //     }
+        majority = "";
+        count = 0;
+        for (int i = 0; i < N; i++) {
+            if (count == 0) {
+                majority = words[i];
+            }
+            majority == words[i] ? count++ : count--;
+        }
 
-    //     auto end = chrono::high_resolution_clock::now();
-    //     auto duration =
-    //         chrono::duration_cast<chrono::microseconds>(end - start);
+        auto end = chrono::high_resolution_clock::now();
+        auto duration =
+            chrono::duration_cast<chrono::microseconds>(end - start);
 
-    //     total_duration += duration.count();
-    // }
+        total_duration += duration.count();
+    }
 
-    // cout << "(Boyer-Moore) \tMajority: " << majority
-    //      << "\tAverage time: " << (total_duration / (double)num_runs)
-    //      << " microseconds" << endl;
+    cout << "(Boyer-Moore) \tMajority(" << count << "): " << majority
+         << "\tAverage time: " << (total_duration / (double)num_runs)
+         << " microseconds" << endl;
 
     // delete[] words;
 
