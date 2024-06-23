@@ -178,7 +178,7 @@ int main() {
     highest_count = hash_count.begin()->second;
     for (const auto& pair : hash_count) {
         if (pair.second > highest_count) {
-            majority = pair.first;
+            majority_word = pair.first;
             highest_count = pair.second;
         }
     }
