@@ -47,9 +47,9 @@ string random_word(int random_number) {
 }
 
 int main() {
-    const int N = 100;
+    const int N = 10000;
     const int MAX = 10;
-    const int num_runs = 100000;
+    const int num_runs = 10000;
 
     srand(time(0));
 
@@ -60,11 +60,11 @@ int main() {
     string word;
 
     // Fill and print initial array
-    printf("Word list:\n");
+    // printf("Word list:\n");
     for (int i = 0; i < N; i++) {
         word = random_word(rand() % MAX);
         words.push_back(word);
-        printf("%s ", word.c_str());
+        // printf("%s ", word.c_str());
     }
 
     // 2D vector to store pairs of words and their counts
